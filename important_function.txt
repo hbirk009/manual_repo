@@ -1,1 +1,3 @@
-function to calculate pi
+function to calculate pi - Fixed this one, it was buggy
+
+function to calulate Eulers number
