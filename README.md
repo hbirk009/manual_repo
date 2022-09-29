@@ -1,3 +1,4 @@
+
 # Overview
 
 This repo contains classes and testbenches for creating a monitoring and configuration system for the pCT project. The folders and their purpose is as follows:
@@ -33,6 +34,77 @@ pip install influxdb-client
 pip install pymongo
 ```
 
+Installing uhal requires more steps to install, and must be built using from the IPbus repository. Following the instructions that can be found on https://wiki.uib.no/pct/index.php/Using_IPbus.
+
+First, install required packages:
+
+```
+sudo apt update
+sudo apt install git g++ make erlang python3 python-is-python3 libboost1.71-all-dev libpugixml-dev
+```
+
+Then to build the project, go to the directory where the repository was downloaded:
+
+```
+make
+sudo make install prefix=/home/user/ipbus_install
+```
+Remember to change 'user' with your own user name. Finally add these paths to your environment:
+
+```
+export LD_LIBRARY_PATH=/home/user/ipbus-install/lib:$LD_LIBRARY_PATH
+export PYTHONPATH=/home/user/ipbus-install/lib/python3.8/site-packages:$PYTHONPATH
+```
+Again, remember to change user with your own user name.
+
+# InfluxDB
+
+There are different versions of InfluxDB that can be installed depending on the OS. These can be found at: https://portal.influxdata.com/downloads/.
+For this project, the linux binaries option was used to install the database:
+
+```
+wget https://dl.influxdata.com/influxdb/releases/influxdb2-2.4.0-linux-amd64.tar.gz
+tar xvfz influxdb2-2.4.0-linux-amd64.tar.gz
+```
+
+The InfluxDB server can then be started with the command: 
+```
+influxd
+```
+
+the server is by default set to port 8086 on localhost.
+
+Note that the python-influxdb API requires an API token to perform read and write operations to the database. This token can be generated in the influx web interface and then said token must be inserted into the influx API python class found in the IPbusAPI folder.
+
+# Grafana
+
+Again, there are different versions of Grafana, depending on the OS used, which can be found here: https://grafana.com/docs/grafana/latest/setup-grafana/installation/.
+We will assume that Ubuntu is used, and we will install the Enterprise edition of Grafana, which is the default. To install Grafana:
+
+```
+sudo apt-get install -y apt-transport-https
+sudo apt-get install -y software-properties-common wget
+sudo wget -q -O /usr/share/keyrings/grafana.key https://packages.grafana.com/gpg.key
+```
+
+Then add this repository:
+```
+echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://packages.grafana.com/enterprise/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+```
+
+Then finally: 
+```
+sudo apt-get update
+sudo apt-get install grafana-enterprise
+```
+
+The server can be started with the command:
+```
+sudo service grafana-server start
+```
+Grafana is by default set to port 3000 on localhost.
+
+# MongoDB
 
 
 
@@ -78,3 +150,7 @@ We also will perform a standard filtering option through InfluxDB, so the proces
 ![](Images/processing_data.png)
 
 The grafana dashboard has been made that gives overview of all layers and all measurements and a json file of this dashboard is in InfluxDB folder
+
+
+
+
